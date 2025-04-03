@@ -1,25 +1,22 @@
-import { EvalBarDisplay } from '@/eval-bar/eval-bar-display'
-import { Prediction } from '@/eval-bar/types'
+import env from '@/env'
 import { useEffect, useRef, useState } from 'react'
+import { EvalBarDisplay } from './eval-bar-display'
+import { Prediction } from './types'
 
 export default function EvalBar() {
   const [evalValue, setEvalValue] = useState(50)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [accessToken, setAccessToken] = useState(import.meta.env.VITE_ACCESS_TOKEN)
+  const [accessToken, setAccessToken] = useState(env.ACCESS_TOKEN)
   const [currentPrediction, setCurrentPrediction] = useState<Prediction>()
-
-  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID
-  const REFRESH_TOKEN = import.meta.env.VITE_REFRESH_TOKEN
-  const BROADCASTER_ID = import.meta.env.VITE_BROADCASTER_ID
 
   const refreshAccessToken = async () => {
     const response = await fetch('https://id.twitch.tv/oauth2/token', {
       method: 'POST',
       body: new URLSearchParams({
-        client_id: CLIENT_ID!,
-        client_secret: import.meta.env.VITE_CLIENT_SECRET!,
-        refresh_token: REFRESH_TOKEN!,
+        client_id: env.CLIENT_ID!,
+        client_secret: env.CLIENT_SECRET!,
+        refresh_token: env.REFRESH_TOKEN!,
         grant_type: 'refresh_token',
       }),
     })
@@ -36,7 +33,7 @@ export default function EvalBar() {
   }
 
   const updatePredictionState = async (token = accessToken) => {
-    if (!CLIENT_ID || !token || !BROADCASTER_ID) {
+    if (!env.CLIENT_ID || !token || !env.BROADCASTER_ID) {
       console.error('Missing required environment variables or broadcaster ID.')
       return
     }
@@ -45,12 +42,12 @@ export default function EvalBar() {
 
     try {
       const response = await fetch(
-        `https://api.twitch.tv/helix/predictions?broadcaster_id=${BROADCASTER_ID}`,
+        `https://api.twitch.tv/helix/predictions?broadcaster_id=${env.BROADCASTER_ID}`,
         {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
-            'Client-Id': CLIENT_ID,
+            'Client-Id': env.CLIENT_ID,
           },
         },
       )
