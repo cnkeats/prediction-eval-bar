@@ -1,9 +1,7 @@
-import EvalBar from "./EvalBar";
+import EvalBar from './EvalBar'
 
 function App() {
-  return (
-	<EvalBar />
-  );
+  return <EvalBar />
 }
 
-export default App;
+export default App
