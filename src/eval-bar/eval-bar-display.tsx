@@ -12,6 +12,7 @@ export function EvalBarDisplay({ evalValue, error }: EvalBarDisplayProps) {
         backgroundColor: 'rgba(94, 130, 191, 0.5)',
         boxSizing: 'border-box',
         height: '100vh',
+        width: 'fit-content',
         flexDirection: 'column',
         justifyContent: 'stretch',
       }}
