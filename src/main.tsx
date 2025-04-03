@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import EvalBar from './eval-bar/eval-bar.tsx'
 import './index.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <EvalBar />
   </StrictMode>,
 )
