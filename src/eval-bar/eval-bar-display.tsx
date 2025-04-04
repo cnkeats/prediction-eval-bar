@@ -1,9 +1,8 @@
 type EvalBarDisplayProps = {
   evalValue: number
-  error: string | null
 }
 
-export function EvalBarDisplay({ evalValue, error }: EvalBarDisplayProps) {
+export function EvalBarDisplay({ evalValue }: EvalBarDisplayProps) {
   return (
     <div
       style={{
@@ -40,7 +39,6 @@ export function EvalBarDisplay({ evalValue, error }: EvalBarDisplayProps) {
       >
         Believers
       </div>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
     </div>
   )
 }
