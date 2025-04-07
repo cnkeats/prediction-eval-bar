@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { EvalBarDisplay } from './eval-bar-display'
+import EvalBarDisplay from './eval-bar-display'
 
 const meta: Meta<typeof EvalBarDisplay> = {
   title: 'Evaluation Bar',

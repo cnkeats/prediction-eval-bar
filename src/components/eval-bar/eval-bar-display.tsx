@@ -2,7 +2,7 @@ type EvalBarDisplayProps = {
   evalValue: number
 }
 
-export function EvalBarDisplay({ evalValue }: EvalBarDisplayProps) {
+const EvalBarDisplay: React.FC<EvalBarDisplayProps> = ({ evalValue }) => {
   return (
     <div
       style={{
@@ -42,3 +42,5 @@ export function EvalBarDisplay({ evalValue }: EvalBarDisplayProps) {
     </div>
   )
 }
+
+export default EvalBarDisplay

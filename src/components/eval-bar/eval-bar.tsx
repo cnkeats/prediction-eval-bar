@@ -1,8 +1,8 @@
 import { getLatestPrediction } from '@/api/prediction'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { EvalBarDisplay } from './eval-bar-display'
+import EvalBarDisplay from './eval-bar-display'
 
-export default function EvalBar() {
+const EvalBar: React.FC = () => {
   const [evalValue, setEvalValue] = useState(50)
   const [delay, setDelay] = useState(2000)
   const intervalRef = useRef<ReturnType<typeof setInterval>>(null)
@@ -49,3 +49,5 @@ export default function EvalBar() {
 
   return <EvalBarDisplay evalValue={evalValue} />
 }
+
+export default EvalBar
