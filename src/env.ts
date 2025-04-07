@@ -5,9 +5,7 @@ const createEnv = () => {
     CLIENT_ID: z.string(),
     CLIENT_SECRET: z.string(),
     REDIRECT_URI: z.string().url(),
-    ACCESS_TOKEN: z.string(),
     REFRESH_TOKEN: z.string(),
-    BROADCASTER_ID: z.string(),
   })
 
   const envVars = Object.entries(import.meta.env).reduce<Record<string, string>>((acc, curr) => {
