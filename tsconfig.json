@@ -29,5 +29,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["."]
+  "include": [".", ".storybook/*.ts"]
 }

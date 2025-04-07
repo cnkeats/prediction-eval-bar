@@ -1,53 +1,49 @@
-import { getLatestPrediction, Prediction } from '@/api/prediction'
+import { getLatestPrediction } from '@/api/prediction'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { EvalBarDisplay } from './eval-bar-display'
 
 export default function EvalBar() {
   const [evalValue, setEvalValue] = useState(50)
-  const [currentPrediction, setCurrentPrediction] = useState<Prediction>()
+  const [duration, setDuration] = useState(2000)
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(null)
 
   const updatePredictionState = useCallback(async () => {
     const prediction = await getLatestPrediction()
-    if (!prediction) return
 
-    setCurrentPrediction(prediction)
+    if (!prediction) {
+      return
+    }
 
-    const latestPredictionOutcomes = prediction.outcomes
+    const [believerOutcome, doubterOutcome] = prediction.outcomes
 
-    const believerPoints = latestPredictionOutcomes[0].channel_points
-    const doubterPoints = latestPredictionOutcomes[1].channel_points
+    if (!believerOutcome || !doubterOutcome) {
+      return
+    }
+
+    const believerPoints = believerOutcome.channel_points
+    const doubterPoints = doubterOutcome.channel_points
     const totalPoints = believerPoints + doubterPoints
     const percentage = (believerPoints / totalPoints) * 100
     setEvalValue(percentage)
-    console.table({
-      BelieverPercentage: percentage.toFixed(2) + '%',
-    })
 
-    const predictionStatus = currentPrediction?.status
-
-    // if (predictionStatus !== "ACTIVE") {
-    // 	setDuration(10000);
-    // 	console.log('prediction not active');
-    // }
-    // else {
-    // 	setDuration(1000);
-    // }
-  }, [currentPrediction?.status])
-
-  const [duration, setDuration] = useState(5000)
-  const interval = useRef(null)
+    if (prediction.status === 'ACTIVE') {
+      setDuration(2000)
+    } else {
+      setDuration(10000)
+    }
+  }, [])
 
   useEffect(() => {
-    const fetchData = async () => {
-      await updatePredictionState()
-    }
+    void updatePredictionState()
 
-    fetchData()
-
-    interval.current = setInterval(fetchData, duration)
+    intervalRef.current = setInterval(() => {
+      void updatePredictionState()
+    }, duration)
 
     return () => {
-      clearInterval(interval.current)
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
     }
   }, [duration, updatePredictionState])
 
