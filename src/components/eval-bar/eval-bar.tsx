@@ -4,7 +4,7 @@ import { EvalBarDisplay } from './eval-bar-display'
 
 export default function EvalBar() {
   const [evalValue, setEvalValue] = useState(50)
-  const [duration, setDuration] = useState(2000)
+  const [delay, setDelay] = useState(2000)
   const intervalRef = useRef<ReturnType<typeof setInterval>>(null)
 
   const updatePredictionState = useCallback(async () => {
@@ -27,9 +27,9 @@ export default function EvalBar() {
     setEvalValue(percentage)
 
     if (prediction.status === 'ACTIVE') {
-      setDuration(2000)
+      setDelay(2000)
     } else {
-      setDuration(10000)
+      setDelay(10000)
     }
   }, [])
 
@@ -38,14 +38,14 @@ export default function EvalBar() {
 
     intervalRef.current = setInterval(() => {
       void updatePredictionState()
-    }, duration)
+    }, delay)
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
       }
     }
-  }, [duration, updatePredictionState])
+  }, [delay, updatePredictionState])
 
   return <EvalBarDisplay evalValue={evalValue} />
 }
