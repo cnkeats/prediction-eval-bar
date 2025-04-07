@@ -1,53 +1,61 @@
-import { getLatestPrediction } from '@/api/prediction'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { getLatestPrediction, Prediction } from '@/api/prediction'
+import { useEffect, useMemo, useState } from 'react'
+import useSWR from 'swr'
 import EvalBarDisplay from './eval-bar-display'
 
+const DEFAULT_EVAL_VALUE = 50
+const DEFAULT_REFRESH_INTERVAL = 2000
+const MAX_REFRESH_INTERVAL = 10000
+
 const EvalBar: React.FC = () => {
-  const [evalValue, setEvalValue] = useState(50)
-  const [delay, setDelay] = useState(2000)
-  const intervalRef = useRef<ReturnType<typeof setInterval>>(null)
+  const prediction = useRefreshingLatestPrediction()
 
-  const updatePredictionState = useCallback(async () => {
-    const prediction = await getLatestPrediction()
-
+  const evalValue = useMemo(() => {
     if (!prediction) {
-      return
+      return DEFAULT_EVAL_VALUE
     }
-
-    const [believerOutcome, doubterOutcome] = prediction.outcomes
-
-    if (!believerOutcome || !doubterOutcome) {
-      return
-    }
-
-    const believerPoints = believerOutcome.channel_points
-    const doubterPoints = doubterOutcome.channel_points
-    const totalPoints = believerPoints + doubterPoints
-    const percentage = (believerPoints / totalPoints) * 100
-    setEvalValue(percentage)
-
-    if (prediction.status === 'ACTIVE') {
-      setDelay(2000)
-    } else {
-      setDelay(10000)
-    }
-  }, [])
-
-  useEffect(() => {
-    void updatePredictionState()
-
-    intervalRef.current = setInterval(() => {
-      void updatePredictionState()
-    }, delay)
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
-    }
-  }, [delay, updatePredictionState])
+    return getEvalValueFromPrediction(prediction)
+  }, [prediction])
 
   return <EvalBarDisplay evalValue={evalValue} />
 }
 
 export default EvalBar
+
+const useRefreshingLatestPrediction = () => {
+  const [refreshInterval, setRefreshInterval] = useState(DEFAULT_REFRESH_INTERVAL)
+
+  const { data: prediction } = useSWR('latestPrediction', getLatestPrediction, {
+    refreshInterval,
+  })
+
+  useEffect(() => {
+    if (prediction?.status === 'ACTIVE') {
+      setRefreshInterval(DEFAULT_REFRESH_INTERVAL)
+    } else {
+      setRefreshInterval(MAX_REFRESH_INTERVAL)
+    }
+  }, [prediction?.status])
+
+  return prediction
+}
+
+const getEvalValueFromPrediction = (prediction: Prediction): number => {
+  const [believerOutcome, doubterOutcome] = prediction.outcomes
+
+  if (!believerOutcome || !doubterOutcome) {
+    return DEFAULT_EVAL_VALUE
+  }
+
+  const believerPoints = believerOutcome.channel_points
+  const doubterPoints = doubterOutcome.channel_points
+  const totalPoints = believerPoints + doubterPoints
+
+  if (totalPoints === 0) {
+    return DEFAULT_EVAL_VALUE // avoid division by zero
+  }
+
+  const percentage = (believerPoints / totalPoints) * 100
+
+  return percentage
+}
