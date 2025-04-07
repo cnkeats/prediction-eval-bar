@@ -11,7 +11,7 @@
     "lint:format": "prettier --check .",
     "lint:code": "eslint . --max-warnings=0",
     "lint:types": "tsc --noEmit",
-    "lint": "concurrently -g -c auto -n \"format,code,types\" \"yarn lint:format\" \"yarn lint:code\" \"yarn lint:types\"",
+    "lint": "concurrently -g -c auto -n \"format,code,types\" \"bun run lint:format\" \"bun run lint:code\" \"bun run lint:types\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -44,6 +44,5 @@
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.29.0",
     "vite": "^6.2.5"
-  },
-  "packageManager": "yarn@4.8.1"
+  }
 }
