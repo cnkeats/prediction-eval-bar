@@ -4,6 +4,9 @@ import EvalBarDisplay from './eval-bar-display'
 const meta: Meta<typeof EvalBarDisplay> = {
   title: 'Evaluation Bar',
   component: EvalBarDisplay,
+  parameters: {
+    layout: 'fullscreen',
+  },
 }
 
 export default meta

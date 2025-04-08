@@ -5,5 +5,6 @@ export default {
   quoteProps: 'as-needed',
   semi: false,
   singleQuote: true,
-  plugins: ['prettier-plugin-organize-imports'],
+  tailwindStylesheet: 'src/index.css',
+  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-tailwindcss'],
 }
