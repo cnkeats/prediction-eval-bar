@@ -10,14 +10,14 @@ const MAX_REFRESH_INTERVAL = 10000
 const EvalBar: React.FC = () => {
   const prediction = useRefreshingLatestPrediction()
 
-  const evalValue = useMemo(() => {
+  const value = useMemo(() => {
     if (!prediction) {
       return DEFAULT_EVAL_VALUE
     }
-    return getEvalValueFromPrediction(prediction)
+    return getValueFromPrediction(prediction)
   }, [prediction])
 
-  return <EvalBarDisplay evalValue={evalValue} />
+  return <EvalBarDisplay value={value} />
 }
 
 export default EvalBar
@@ -40,7 +40,7 @@ const useRefreshingLatestPrediction = () => {
   return prediction
 }
 
-const getEvalValueFromPrediction = (prediction: Prediction): number => {
+const getValueFromPrediction = (prediction: Prediction): number => {
   const [believerOutcome, doubterOutcome] = prediction.outcomes
 
   if (!believerOutcome || !doubterOutcome) {

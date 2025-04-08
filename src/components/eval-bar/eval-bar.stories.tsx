@@ -14,10 +14,10 @@ type Story = StoryObj<typeof EvalBarDisplay>
 
 export const Default: Story = {
   args: {
-    evalValue: 50,
+    value: 50,
   },
   argTypes: {
-    evalValue: {
+    value: {
       control: {
         type: 'range',
         min: 0,

@@ -1,13 +1,13 @@
 type EvalBarDisplayProps = {
-  evalValue: number
+  value: number
 }
 
-const EvalBarDisplay: React.FC<EvalBarDisplayProps> = ({ evalValue }) => (
+const EvalBarDisplay: React.FC<EvalBarDisplayProps> = ({ value }) => (
   <div className="flex h-screen w-fit flex-col">
-    <BarPart color="#db00b3" size={100 - evalValue}>
+    <BarPart color="#db00b3" size={100 - value}>
       Doubters
     </BarPart>
-    <BarPart color="#1e69ff" size={evalValue}>
+    <BarPart color="#1e69ff" size={value}>
       Believers
     </BarPart>
   </div>
